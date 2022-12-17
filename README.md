@@ -41,7 +41,7 @@ use traefik use  k8s and docker provider create argocd in k8s
 ## 建立 k3d cluster
 
 ```bash
- > k3d cluster create demo-traefik --port 80:32080@loadbalancer --port 443:32443@loadbalancer --port 8080:32090@loadbalancer  --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*" --api-port 6550 --network reverse-proxy --volume /var/run/docker.sock:/var/run/docker.sock
+ > k3d cluster create demo-traefik --port 80:32080@loadbalancer --port 443:32443@loadbalancer --port 8080:32090@loadbalancer --port 8082:32082@loadbalancer --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*" --api-port 6550 --network reverse-proxy --volume /var/run/docker.sock:/var/run/docker.sock
 ```
 
 ## 安裝 Traefik
