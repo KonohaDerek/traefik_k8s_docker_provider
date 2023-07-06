@@ -19,7 +19,12 @@
 ## 建立 k3d cluster
 
 ```bash
- > k3d cluster create demo-traefik --port 80:32080@loadbalancer --port 443:32443@loadbalancer --port 8080:32090@loadbalancer  --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*" --api-port 6550 --network reverse-proxy --volume /var/run/docker.sock:/var/run/docker.sock
+ > k3d cluster create derek-cluster --port 80:32080@loadbalancer --port 443:32443@loadbalancer --port 8080:32090@loadbalancer  --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*" --api-port 6550 --network reverse-proxy --volume /var/run/docker.sock:/var/run/docker.sock
+```
+
+## 取得 kubeconfig
+```bash
+> k3d kubeconfig get derek-cluster
 ```
 
 ## 安裝 Traefik
@@ -90,6 +95,7 @@ spec:
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
             - --entryPoints.metrics.address=:8082
+            - --entryPoints.mongo.address=:27017
           ports:
             - name: web
               containerPort: 8000
@@ -99,6 +105,8 @@ spec:
               containerPort: 8080
             - name: metrics
               containerPort: 8082
+            - name: mongo
+              containerPort: 27017
           volumeMounts:
             - name: dockersock
               mountPath: "/var/run/docker.sock"

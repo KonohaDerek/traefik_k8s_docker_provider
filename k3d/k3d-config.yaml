@@ -1,0 +1,35 @@
+---
+apiVersion: k3d.io/v1alpha3
+kind: Simple
+name: derek-cluster
+servers: 0
+agents: 0
+kubeAPI:
+  hostPort: "6550"
+image: rancher/k3s:v1.20.4-k3s1
+network: reverse-proxy
+volumes: # repeatable flags are represented as YAML lists
+  - volume: /var/run/docker.sock:/var/run/docker.sock # same as `--volume '/my/host/path:/path/in/node@server:0;agent:*'`
+  - volume: "/home/derek_chen/k3d/data:/data"
+ports:
+  - port: 80:32080
+  - port: 443:32443
+  - port: 8080:32090
+options:
+  # k3d: # k3d runtime settings
+  #   wait: true # wait for cluster to be usable before returining; same as `--wait` (default: true)
+  #   timeout: "60s" # wait timeout before aborting; same as `--timeout 60s`
+  #   disableLoadbalancer: false # same as `--no-lb`
+  #   disableImageVolume: false # same as `--no-image-volume`
+  #   disableRollback: false # same as `--no-Rollback`
+  #   loadbalancer:
+  #     configOverrides:
+  #       - settings.workerConnections=2048
+  k3s: # options passed on to K3s itself
+    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+      - arg: --disable=servicelb
+        nodeFilters:
+          - server:*

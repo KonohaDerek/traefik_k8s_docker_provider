@@ -35,14 +35,14 @@ spec:
             - --api.dashboard=true
             - --providers.docker=true
             - --providers.docker.exposedbydefault=false
+            - --providers.docker.network=reverse-proxy
             - --providers.kubernetescrd
             - --certificatesresolvers.myresolver.acme.tlschallenge
             - --certificatesresolvers.myresolver.acme.email=peter890701@gmail.com
-            - --certificatesresolvers.myresolver.acme.storage=acme.json
+            - --certificatesresolvers.myresolver.acme.storage=/acme.json
             # Please note that this is the staging Let's Encrypt server.
             # Once you get things working, you should remove that whole line altogether.
             # - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-            - --providers.file.filename=dynamic_conf.toml
             - --global.checknewversion
             - --global.sendanonymoususage
             - --ping=true
@@ -61,6 +61,8 @@ spec:
           volumeMounts:
             - name: dockersock
               mountPath: "/var/run/docker.sock"
+            - name: traefikdata
+              mountPath: "/acme.json"
           securityContext:
             privileged: true
             runAsUser: 0
@@ -68,3 +70,6 @@ spec:
         - name: dockersock
           hostPath:
             path: /var/run/docker.sock
+        - name: traefikdata
+          hostPath:
+            path: /data/traefik/certs/acme.json
